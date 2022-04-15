@@ -90,4 +90,21 @@ router.get('/getUrl', async(req, res) => {
     }
 })
 
+// @route    GET  /api/url/getAllUrl
+// @desc     Get all the urls 
+router.get('/getAllUrl', async(req, res) => {
+    
+
+    const url = await Url.find();
+
+    if(url){
+        res.header("Access-Control-Allow-Origin", "*");
+        return res.status(200).json(url);
+    }else{
+        return res.status(404).json('No URLs found in the DB');
+    }
+})
+
+
+
 module.exports = router;

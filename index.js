@@ -3,7 +3,6 @@ const connectDB = require('./config/db');
 
 const app = express();
 
-
 //Connect to db
 connectDB();
 
@@ -14,10 +13,8 @@ app.use('/', require('./routes/index'));
 
 app.use('/api/url', require('./routes/url'));
 
-const PORT = 3000;
+// const PORT = process.env.PORT || 3000;
 
-
-
-app.listen(PORT, () => console.log(`App is running on port: ${PORT}`));
-
-
+app.listen(process.env.PORT || 3000, () =>
+	console.log(`App is running on port: ${PORT}`)
+);
