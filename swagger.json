@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
       "version": "1.0.0", 
-      "title": "URL Shortner",
+      "title": "Shortify Services",
       "description": "URL Shortner",
       "license": {
         "name": "MIT",
@@ -79,7 +79,85 @@
             },
             "deprecated": false
           }
-        }  
+        },
+      "/api/url/shorten": {
+          "post": {
+            "summary": "Shorten the url",
+            "parameters": [
+              {
+                "in": "body",
+                "name": "longUrl",
+                "description": "Actual URL to be shortened",
+                "required": true,
+                "example": {"longUrl" : "https://www.google.com"}
+              }
+            ],
+            "consumes": [
+              "application/json"
+            ],
+            "produces": [
+              "*/*"
+            ],
+            "responses": {
+              "200": {
+                "description": "Successfully shortened the url"
+                
+              },
+              "401": {
+                "description": "You are not authorized to view the resource"
+              },
+              "403": {
+                "description": "Accessing the resource you were trying to reach is forbidden"
+              },
+              "404": {
+                "description": "The resource you were trying to reach is not found"
+              },
+              "500": {
+                "description": "Application failed to process the request"
+              }
+            },
+            "deprecated": false
+          }
+        },
+      "/api/url/delete": {
+          "delete": {
+            "summary": "Delete the url",
+            "parameters": [
+              {
+                "in": "body",
+                "name": "longUrl",
+                "description": "Actual URL to be deleted",
+                "required": true,
+                "example": {"longUrl" : "https://www.google.com"}
+              }
+            ],
+            "consumes": [
+              "application/json"
+            ],
+            "produces": [
+              "*/*"
+            ],
+            "responses": {
+              "200": {
+                "description": "Successfully deleted the url"
+                
+              },
+              "401": {
+                "description": "You are not authorized to view the resource"
+              },
+              "403": {
+                "description": "Accessing the resource you were trying to reach is forbidden"
+              },
+              "404": {
+                "description": "The resource you were trying to reach is not found"
+              },
+              "500": {
+                "description": "Application failed to process the request"
+              }
+            },
+            "deprecated": false
+          }
+        }
       }
       
       

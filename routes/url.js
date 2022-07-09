@@ -30,7 +30,9 @@ router.post('/shorten', async (req, res) => {
 			let url = await Url.findOne({ longUrl });
 
 			if (url) {
-				return res.json(url);
+				return res.json(
+					`URL has already been shortified! Try this -> ${url.shortUrl}`
+				);
 			} else {
 				const shortUrl = baseUrl + '/' + urlCode;
 
