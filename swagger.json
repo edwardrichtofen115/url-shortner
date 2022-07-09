@@ -19,5 +19,49 @@
     ],
     "schemes": ["http"],
     "consumes": ["application/json"],
-    "produces": ["application/json"]
+    "produces": ["application/json"],
+    "paths": {
+      "/{code}": {
+        "get": {
+          "tags": [
+            "Get Long URL"
+          ],
+          "summary": "Given the short code, redirect to the actual URL",
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "path",
+              "name": "code",
+              "description": "Unique code of the shortened-url",
+              "required": true
+              
+            }
+          ],
+          "produces": [
+            "*/*"
+          ],
+          "responses": {
+            "200": {
+              "description": "Successfully redirected to the actual URL"
+              
+            },
+            "401": {
+              "description": "You are not authorized to view the resource"
+            },
+            "403": {
+              "description": "Accessing the resource you were trying to reach is forbidden"
+            },
+            "404": {
+              "description": "The resource you were trying to reach is not found"
+            },
+            "500": {
+              "description": "Application failed to process the request"
+            }
+          },
+          "deprecated": false
+        }
+      }
+    }
   }

@@ -6,21 +6,24 @@ const Url = require('../models/Url');
 // @route   GET /:code
 // @desc    route the code url to the long/original URL
 
-router.get('/:code', async (req,res) => {
-    
+router.get('/', (req, res) => {
+	res.redirect('/api-docs');
+});
 
-    try {
-        const url = await Url.findOne({urlCode: req.params.code});
-        if(url){
-            //redirec to the long url
-            return res.redirect(url.longUrl);
-        }else{
-            //send message saying this route does not exist
-            return res.status(404).json('No url found');
-        }
-    } catch (error) {
-        return res.status(500).json('Server problem')
-    }
-})
+router.get('/:code', async (req, res) => {
+	try {
+		const url = await Url.findOne({ urlCode: req.params.code });
+		if (url) {
+			//redirec to the long url
+
+			return res.redirect(200, url.longUrl);
+		} else {
+			//send message saying this route does not exist
+			return res.status(404).json('No url found');
+		}
+	} catch (error) {
+		return res.status(500).json('Server problem');
+	}
+});
 
 module.exports = router;
