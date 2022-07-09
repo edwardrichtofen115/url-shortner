@@ -20,4 +20,4 @@ app.use('/api/url', require('./routes/url'));
 
 // const PORT = process.env.PORT || 3000;
 
-app.listen(process.env.PORT || 3000, () => console.log(`App is running}`));
+app.listen(process.env.PORT || 3000, () => console.log(`App is running`));
