@@ -6,105 +6,93 @@ const shortId = require('shortid');
 const config = require('config');
 const Url = require('../models/Url');
 
-
-
-
 // @route    POST  /api/url/shorten
 // @desc     Create the short version of URL
 
-router.post('/shorten', async (req,res) => {
-    const { longUrl } = req.body;
-    const baseUrl = config.get('baseURL');
+router.post('/shorten', async (req, res) => {
+	const { longUrl } = req.body;
+	const baseUrl = config.get('baseURL');
 
-    // Check base URL
-    if(!validUrl.isUri(baseUrl)){
-        return res.status(401).json('Invalid base url');
-    }
+	// Check base URL
+	if (!validUrl.isUri(baseUrl)) {
+		return res.status(401).json('Invalid base url');
+	}
 
-    // Create url code
-    const urlCode = shortId.generate();
+	// Create url code
+	const urlCode = shortId.generate();
 
-    //Check long url
-    if(!validUrl.isUri(longUrl)){
-        return res.status(401).json('Invalid url passed');
-    }else{
-        // check if long url already exists in database
-        try {
-            let url = await Url.findOne({longUrl});
+	//Check long url
+	if (!validUrl.isUri(longUrl)) {
+		return res.status(401).json('Invalid url passed');
+	} else {
+		// check if long url already exists in database
+		try {
+			let url = await Url.findOne({ longUrl });
 
-            if(url){
-                
-                return res.json(url);
-            }else{
-                const shortUrl = baseUrl + '/' + urlCode;
+			if (url) {
+				return res.json(url);
+			} else {
+				const shortUrl = baseUrl + '/' + urlCode;
 
-                url = new Url({
-                    longUrl,
-                    shortUrl,
-                    urlCode,
-                    date: new Date()
-                });
+				url = new Url({
+					longUrl,
+					shortUrl,
+					urlCode,
+					date: new Date(),
+				});
 
-                await url.save();
+				await url.save();
 
-                return res.status(200).json(url);
-            }
-        } catch (error) {
-            console.error(error);
-            res.status(500).json('Server error')
-        }
-    }
-
-})
+				return res.status(200).json(url);
+			}
+		} catch (error) {
+			console.error(error);
+			res.status(500).json('Server error');
+		}
+	}
+});
 
 // @route    DELETE  /api/url/delete
 // @desc     Delete the short version of url saved in DB
-router.delete('/delete', async (req,res) => {
-    const {longUrl} = req.body;
+router.delete('/delete', async (req, res) => {
+	const { longUrl } = req.body;
 
-    const url = await Url.findOne({longUrl: longUrl});
+	const url = await Url.findOne({ longUrl: longUrl });
 
-    if(url){
-        url.delete();
-        return res.status(200).json(`${longUrl} has been deleted`);
-
-    }else{
-        return res.status(404).json(`Cannot delete ${longUrl} as it does not exist`);
-    }
-
-    
-})
-
+	if (url) {
+		url.delete();
+		return res.status(200).json(`${longUrl} has been deleted`);
+	} else {
+		return res
+			.status(404)
+			.json(`Cannot delete ${longUrl} as it does not exist`);
+	}
+});
 
 // @route    GET  /api/url/getUrl
-// @desc     Get the short version of url saved in DB
-router.get('/getUrl', async(req, res) => {
-    const {longUrl} = req.body;
+// @desc     Get the actual url from the short code
+router.get('/getUrl/:code', async (req, res) => {
+	const code = req.params.code;
+	const url = await Url.findOne({ urlCode: code });
 
-    const url = await Url.findOne({longUrl: longUrl});
-
-    if(url){
-        return res.status(200).json(url.shortUrl);
-    }else{
-        return res.status(404).json('Specified URL does not exist');
-    }
-})
+	if (url) {
+		return res.status(200).json(url.longUrl);
+	} else {
+		return res.status(404).json('Specified URL does not exist');
+	}
+});
 
 // @route    GET  /api/url/getAllUrl
-// @desc     Get all the urls 
-router.get('/getAllUrl', async(req, res) => {
-    
+// @desc     Get all the urls
+router.get('/getAllUrl', async (req, res) => {
+	const url = await Url.find();
 
-    const url = await Url.find();
-
-    if(url){
-        res.header("Access-Control-Allow-Origin", "*");
-        return res.status(200).json(url);
-    }else{
-        return res.status(404).json('No URLs found in the DB');
-    }
-})
-
-
+	if (url) {
+		res.header('Access-Control-Allow-Origin', '*');
+		return res.status(200).json(url);
+	} else {
+		return res.status(404).json('No URLs found in the DB');
+	}
+});
 
 module.exports = router;

@@ -16,7 +16,7 @@ router.get('/:code', async (req, res) => {
 		if (url) {
 			//redirec to the long url
 
-			return res.redirect(200, url.longUrl);
+			res.redirect(url.longUrl);
 		} else {
 			//send message saying this route does not exist
 			return res.status(404).json('No url found');
